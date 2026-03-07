@@ -139,14 +139,19 @@ export function Scan() {
 
                             {/* Shelf Life */}
                             {result.shelf_life && (
-                                <div className="bg-muted p-4 rounded-lg flex justify-between items-center">
-                                    <div>
-                                        <p className="text-sm text-muted-foreground">Estimated Shelf Life</p>
-                                        <p className="font-bold">{result.shelf_life.estimated_days} days</p>
+                                <div className="space-y-3">
+                                    <div className="bg-muted p-4 rounded-lg flex justify-between items-center">
+                                        <div>
+                                            <p className="text-sm text-muted-foreground">Estimated Shelf Life</p>
+                                            <p className="font-bold">{result.shelf_life.estimated_days} days</p>
+                                        </div>
+                                        <div className="text-right">
+                                            <p className="text-sm text-muted-foreground">Optimal Date</p>
+                                            <p className="font-bold">{result.shelf_life.optimal_consumption_date}</p>
+                                        </div>
                                     </div>
-                                    <div className="text-right">
-                                        <p className="text-sm text-muted-foreground">Optimal Date</p>
-                                        <p className="font-bold">{result.shelf_life.optimal_consumption_date}</p>
+                                    <div className="bg-primary/5 p-3 rounded-lg border border-primary/20 text-center text-sm font-medium text-primary shadow-sm">
+                                        💡 Storage: {result.shelf_life.storage_recommendation}
                                     </div>
                                 </div>
                             )}
@@ -172,6 +177,6 @@ export function Scan() {
                     )}
                 </div>
             </div>
-        </div>
+        </div >
     );
 }
