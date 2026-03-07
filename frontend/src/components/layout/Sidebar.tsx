@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Apple, LineChart, UploadCloud, Info } from 'lucide-react';
+import { Apple, LineChart, UploadCloud, Info, MessageSquare } from 'lucide-react';
 import { cn } from '../../utils/helpers';
 
 export function Sidebar() {
@@ -9,6 +9,7 @@ export function Sidebar() {
         { name: 'Scan Fruit', path: '/scan', icon: <UploadCloud className="w-5 h-5 mr-3" /> },
         { name: 'Batch Process', path: '/batch', icon: <Apple className="w-5 h-5 mr-3" /> },
         { name: 'About', path: '/about', icon: <Info className="w-5 h-5 mr-3" /> },
+        { name: 'Contact Us', path: '/contact', icon: <MessageSquare className="w-5 h-5 mr-3" /> },
     ];
 
     return (

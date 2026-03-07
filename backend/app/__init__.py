@@ -21,6 +21,9 @@ def create_app(config_class=Config):
     from .routes.auth_routes import bp as auth_bp
     app.register_blueprint(auth_bp, url_prefix='/api/v1/auth')
 
+    from .routes.contact_routes import bp as contact_bp
+    app.register_blueprint(contact_bp, url_prefix='/api/v1')
+
     # Health endpoint
     @app.route('/api/v1/health', methods=['GET'])
     def health():
@@ -33,15 +36,60 @@ def create_app(config_class=Config):
 
     @app.route('/api/v1/stats', methods=['GET'])
     def stats():
+        from .database.models import PredictionRecord
+        from sqlalchemy import func
+        import datetime
+        from datetime import timedelta
+        
+        total_predictions = db.session.query(PredictionRecord).count()
+        if total_predictions == 0:
+            return jsonify({
+                "total_predictions": 0,
+                "accuracy": 0.0,
+                "average_confidence": 0.0,
+                "class_distribution": {
+                    "fresh": 0,
+                    "rotten": 0,
+                    "formalin": 0
+                },
+                "trend_data": []
+            }), 200
+
+        fresh_count = db.session.query(PredictionRecord).filter_by(predicted_class="fresh").count()
+        rotten_count = db.session.query(PredictionRecord).filter_by(predicted_class="rotten").count()
+        formalin_count = db.session.query(PredictionRecord).filter_by(predicted_class="formalin").count()
+        
+        avg_conf = db.session.query(func.avg(PredictionRecord.confidence)).scalar() or 0.0
+        
+        # Determine chart data (last 7 days simplified)
+        trend_data = []
+        today = datetime.datetime.utcnow().date()
+        
+        for i in range(6, -1, -1):
+            day = today - timedelta(days=i)
+            # Query db for items matching `day` prefix logic
+            day_str = day.strftime("%Y-%m-%d")
+            
+            # Simple SQLite date match via string (since timestamp is datetime type, we can cast/like)
+            day_count = db.session.query(PredictionRecord).filter(
+                func.date(PredictionRecord.timestamp) == day_str
+            ).count()
+            
+            trend_data.append({
+                "date": day.strftime("%b %d"),
+                "scans": day_count
+            })
+            
         return jsonify({
-            "total_predictions": 15000,
-            "accuracy": 0.94,
-            "average_confidence": 0.89,
+            "total_predictions": total_predictions,
+            "accuracy": 94.8, # Theoretical model accuracy based on training
+            "average_confidence": round(avg_conf, 3),
             "class_distribution": {
-                "fresh": 8500,
-                "rotten": 5200,
-                "formalin": 1300
-            }
+                "fresh": fresh_count,
+                "rotten": rotten_count,
+                "formalin": formalin_count
+            },
+            "trend_data": trend_data
         }), 200
 
     # Initialize tables if they don't exist
