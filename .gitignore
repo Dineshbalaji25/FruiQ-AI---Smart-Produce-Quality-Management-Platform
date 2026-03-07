@@ -1,0 +1,26 @@
+# Ignore virtual environments
+backend/venv/
+
+# Ignore the heavy dataset directory
+FruitVision A Benchmark Dataset for Fresh, Rotten, and Formalin-mixed Fruit Detection/
+
+# Ignore IDE configuration
+.vscode/
+.idea/
+
+# Ignore python cache
+__pycache__/
+*.py[cod]
+
+# Ignore other generic things
+.DS_Store
+
+# Ignore environment variables
+.env
+backend/.env
+frontend/.env
+
+# Ignore locally trained models
+backend/models/trained/
+models/trained/
+
