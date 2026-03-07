@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { UploadCloud, CheckCircle, AlertTriangle, RefreshCw } from 'lucide-react';
+import { UploadCloud, CheckCircle, AlertTriangle, RefreshCw, Apple } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import api from '../services/api';
 import { motion } from 'framer-motion';
