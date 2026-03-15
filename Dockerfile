@@ -29,8 +29,8 @@ COPY backend/ ./
 # Create uploads directory (used by Flask)
 RUN mkdir -p uploads
 
-# Check if models exist and copy them (so they are available if trained later)
-COPY models/ ../models/
+# Create necessary model directory structure
+RUN mkdir -p ../models/trained
 
 # Copy React build from stage 1 to /app/dist (backend static_folder points to '../dist')
 COPY --from=build-stage /app/frontend/dist /app/backend/dist

@@ -1,3 +1,13 @@
+---
+title: FruiQ AI
+emoji: 🍎
+colorFrom: green
+colorTo: red
+sdk: docker
+app_port: 7860
+pinned: false
+---
+
 # FruiQ AI - Smart Produce Quality Management Platform 🍎🥭🍊
 
 [![React](https://img.shields.io/badge/Frontend-React-61DAFB?style=flat-square&logo=react)](https://reactjs.org/)
