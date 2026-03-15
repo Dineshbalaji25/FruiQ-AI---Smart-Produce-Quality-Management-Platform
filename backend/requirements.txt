@@ -7,7 +7,7 @@ celery==5.3.6
 Pillow==10.1.0
 numpy==1.26.2
 opencv-python-headless==4.8.1.78
-# tensorflow==2.15.0 # Commented for simpler installation in skeleton
+tensorflow==2.15.0
 gunicorn==21.2.0
 python-dotenv==1.0.0
 pytest==7.4.3

@@ -1,1 +1,11 @@
-frontend/node_modules \n.git \ndatasets \nuploads \nmodels/trained \nbackend/venv
+frontend/node_modules
+.git
+datasets
+uploads
+models/trained
+backend/venv
+.env
+dist
+node_modules
+*.pyc
+__pycache__
