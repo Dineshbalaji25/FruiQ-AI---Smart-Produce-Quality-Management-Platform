@@ -5,7 +5,8 @@ from .database.db import db
 from .config import Config
 
 def create_app(config_class=Config):
-    app = Flask(__name__)
+    # Set static_folder to point to where the React build outputs its files
+    app = Flask(__name__, static_folder='../dist', static_url_path='/')
     app.config.from_object(config_class)
     
     CORS(app)
@@ -96,4 +97,15 @@ def create_app(config_class=Config):
     with app.app_context():
         db.create_all()
 
+    # Serve React App
+    @app.route('/', defaults={'path': ''})
+    @app.route('/<path:path>')
+    def serve(path):
+        from flask import send_from_directory
+        if path != "" and os.path.exists(os.path.join(app.static_folder, path)):
+            return send_from_directory(app.static_folder, path)
+        else:
+            return send_from_directory(app.static_folder, 'index.html')
+
     return app
+
