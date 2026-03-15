@@ -1,5 +1,5 @@
 # Stage 1: Build React Frontend
-FROM node:18-alpine as build-stage
+FROM node:20-alpine as build-stage
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    libgl1-mesa-glx \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY backend/requirements.txt .
@@ -29,11 +29,11 @@ COPY backend/ ./
 # Create uploads directory (used by Flask)
 RUN mkdir -p uploads
 
-# Check if models exist and copy them (so they are available if trained later)
-COPY models/ ../models/
+# Create necessary model directory structure
+RUN mkdir -p ../models/trained
 
 # Copy React build from stage 1 to /app/dist (backend static_folder points to '../dist')
-COPY --from=build-stage /app/frontend/dist /app/dist
+COPY --from=build-stage /app/frontend/dist /app/backend/dist
 
 # Expose the Hugging Face requested port
 EXPOSE 7860
@@ -47,7 +47,7 @@ ENV UPLOAD_FOLDER=./uploads
 # Create a non-root user (Hugging Face Spaces requirement / best practice)
 RUN useradd -m -u 1000 user
 # Give the user ownership over /app so SQLite can create the db file and uploads can be saved
-RUN chown -R user:user /app /app/backend /app/dist /app/models
+RUN chown -R user:user /app
 
 USER user
 

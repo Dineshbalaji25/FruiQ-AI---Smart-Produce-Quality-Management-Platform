@@ -9,7 +9,7 @@ def create_app(config_class=Config):
     app = Flask(__name__, static_folder='../dist', static_url_path='/')
     app.config.from_object(config_class)
     
-    CORS(app)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
     db.init_app(app)
 
     # Note: the models should be imported here to register with SQLAlchemy
