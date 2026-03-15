@@ -1,5 +1,5 @@
 # Stage 1: Build React Frontend
-FROM node:18-alpine as build-stage
+FROM node:20-alpine as build-stage
 WORKDIR /app/frontend
 COPY frontend/package*.json ./
 RUN npm install
@@ -17,7 +17,7 @@ RUN apt-get update && apt-get install -y \
     libsm6 \
     libxext6 \
     libxrender-dev \
-    libgl1-mesa-glx \
+    libgl1 \
     && rm -rf /var/lib/apt/lists/*
 
 COPY backend/requirements.txt .
