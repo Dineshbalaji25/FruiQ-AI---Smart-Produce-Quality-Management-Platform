@@ -33,7 +33,7 @@ RUN mkdir -p uploads
 COPY models/ ../models/
 
 # Copy React build from stage 1 to /app/dist (backend static_folder points to '../dist')
-COPY --from=build-stage /app/frontend/dist /app/dist
+COPY --from=build-stage /app/frontend/dist /app/backend/dist
 
 # Expose the Hugging Face requested port
 EXPOSE 7860
@@ -47,7 +47,7 @@ ENV UPLOAD_FOLDER=./uploads
 # Create a non-root user (Hugging Face Spaces requirement / best practice)
 RUN useradd -m -u 1000 user
 # Give the user ownership over /app so SQLite can create the db file and uploads can be saved
-RUN chown -R user:user /app /app/backend /app/dist /app/models
+RUN chown -R user:user /app
 
 USER user
 
