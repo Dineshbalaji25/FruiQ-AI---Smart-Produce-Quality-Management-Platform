@@ -1,10 +1,1 @@
-node_modules/
-dist/
-.env
-__pycache__/
-*.pyc
-venv/
-.git/
-datasets/
-models/trained/*.h5
-models/trained/*.keras
+frontend/node_modules \n.git \ndatasets \nuploads \nmodels/trained \nbackend/venv
