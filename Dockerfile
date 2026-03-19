@@ -41,7 +41,7 @@ EXPOSE 7860
 # We don't need Redis or Postgres URLs; the app falls back to SQLite naturally.
 ENV FLASK_APP=wsgi.py
 ENV FLASK_ENV=production
-ENV MODEL_PATH=../models/trained/efficientnet_v2.keras
+ENV MODEL_PATH=./models/trained/efficientnet_v2.keras
 ENV UPLOAD_FOLDER=./uploads
 
 # Create a non-root user (Hugging Face Spaces requirement / best practice)
