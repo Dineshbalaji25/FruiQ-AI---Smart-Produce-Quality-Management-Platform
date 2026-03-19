@@ -20,6 +20,16 @@ class PredictionService:
             print(f"DEBUG: Path exists? {os.path.exists(self.model_path)}")
             if os.path.exists(self.model_path):
                 print(f"DEBUG: File size: {os.path.getsize(self.model_path)} bytes")
+                
+                # Monkey patch Keras Layer to ignore 'quantization_config' which causes ValueError
+                # in mismatched Keras minor versions when loading the model.
+                import keras
+                original_layer_init = keras.layers.Layer.__init__
+                def patched_layer_init(self, *args, **kwargs):
+                    kwargs.pop('quantization_config', None)
+                    original_layer_init(self, *args, **kwargs)
+                keras.layers.Layer.__init__ = patched_layer_init
+
                 try:
                     print(f"Loading model from {self.model_path}...")
                     self.model = tf.keras.models.load_model(self.model_path, compile=False)
@@ -28,6 +38,7 @@ class PredictionService:
                     import traceback
                     print(f"Error loading TF model: {e}")
                     traceback.print_exc()
+
             else:
                 # Let's see what is inside ./models/trained/ if it exists
                 dir_path = os.path.dirname(self.model_path)
