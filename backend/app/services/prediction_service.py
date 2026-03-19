@@ -14,14 +14,26 @@ class PredictionService:
         self.classes = ['fresh', 'rotten', 'formalin']
         
         self.model = None
-        if self.model_path and os.path.exists(self.model_path):
-            try:
-                print(f"Loading model from {self.model_path}...")
-                self.model = tf.keras.models.load_model(self.model_path, compile=False)
-                print("Model loaded successfully.")
-            except Exception as e:
-                print(f"Error loading TF model: {e}")
-                
+        if self.model_path:
+            abs_path = os.path.abspath(self.model_path)
+            print(f"DEBUG: Checking for model at relative: {self.model_path}, absolute: {abs_path}")
+            print(f"DEBUG: Path exists? {os.path.exists(self.model_path)}")
+            if os.path.exists(self.model_path):
+                print(f"DEBUG: File size: {os.path.getsize(self.model_path)} bytes")
+                try:
+                    print(f"Loading model from {self.model_path}...")
+                    self.model = tf.keras.models.load_model(self.model_path, compile=False)
+                    print("Model loaded successfully.")
+                except Exception as e:
+                    import traceback
+                    print(f"Error loading TF model: {e}")
+                    traceback.print_exc()
+            else:
+                # Let's see what is inside ./models/trained/ if it exists
+                dir_path = os.path.dirname(self.model_path)
+                print(f"DEBUG: Directory {dir_path} exists? {os.path.exists(dir_path)}")
+                if os.path.exists(dir_path):
+                    print(f"DEBUG: Contents of {dir_path}: {os.listdir(dir_path)}")
         self.processor = ImageProcessor()
         
     def predict(self, file_stream, include_gradcam=False, include_shelf_life=False, fruit_type='apple'):
