@@ -16,7 +16,7 @@ export function Sidebar() {
         <aside className="w-64 bg-card h-screen border-r border-border hidden md:flex flex-col">
             <div className="p-6 pb-2">
                 <h1 className="text-2xl font-bold flex items-center text-primary">
-                    <img src="/logo.png" alt="FruiQ AI Logo" className="w-8 h-8 mr-2 rounded-md object-contain" /> FruiQ AI
+                    FruiQ AI
                 </h1>
                 <p className="text-sm text-muted-foreground mt-1">Smart Quality Platform</p>
             </div>

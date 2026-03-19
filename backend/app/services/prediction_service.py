@@ -6,7 +6,10 @@ from .freshness_scorer import calculate_freshness_score, determine_grade
 from .shelf_life_predictor import estimate_shelf_life
 from .gradcam_generator import generate_gradcam, overlay_heatmap
 import datetime
+import logging
 import os
+
+logger = logging.getLogger(__name__)
 
 class PredictionService:
     def __init__(self, model_path=None):
@@ -16,10 +19,9 @@ class PredictionService:
         self.model = None
         if self.model_path:
             abs_path = os.path.abspath(self.model_path)
-            print(f"DEBUG: Checking for model at relative: {self.model_path}, absolute: {abs_path}")
-            print(f"DEBUG: Path exists? {os.path.exists(self.model_path)}")
+            logger.info(f"Checking for model at relative: {self.model_path}, absolute: {abs_path}")
             if os.path.exists(self.model_path):
-                print(f"DEBUG: File size: {os.path.getsize(self.model_path)} bytes")
+                logger.info(f"Model file found. Size: {os.path.getsize(self.model_path)} bytes")
                 
                 # Monkey patch Keras Layer to ignore 'quantization_config' which causes ValueError
                 # in mismatched Keras minor versions when loading the model.
@@ -31,20 +33,16 @@ class PredictionService:
                 keras.layers.Layer.__init__ = patched_layer_init
 
                 try:
-                    print(f"Loading model from {self.model_path}...")
+                    logger.info(f"Loading model from {self.model_path}...")
                     self.model = tf.keras.models.load_model(self.model_path, compile=False)
-                    print("Model loaded successfully.")
+                    logger.info("Model loaded successfully.")
                 except Exception as e:
-                    import traceback
-                    print(f"Error loading TF model: {e}")
-                    traceback.print_exc()
-
+                    logger.error(f"Error loading TF model: {e}", exc_info=True)
             else:
-                # Let's see what is inside ./models/trained/ if it exists
                 dir_path = os.path.dirname(self.model_path)
-                print(f"DEBUG: Directory {dir_path} exists? {os.path.exists(dir_path)}")
+                logger.warning(f"Model file not found at {self.model_path}")
                 if os.path.exists(dir_path):
-                    print(f"DEBUG: Contents of {dir_path}: {os.listdir(dir_path)}")
+                    logger.info(f"Contents of {dir_path}: {os.listdir(dir_path)}")
         self.processor = ImageProcessor()
         
     def predict(self, file_stream, include_gradcam=False, include_shelf_life=False, fruit_type='apple'):

@@ -1,8 +1,15 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 import os
+import logging
 from .database.db import db
 from .config import Config
+
+# Configure logging
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+)
 
 def create_app(config_class=Config):
     # Set static_folder to point to where the React build outputs its files
