@@ -20,10 +20,10 @@ def get_label(file_path):
     
     label_one_hot = tf.one_hot(label, 3)
     
-    # Score mapping: Fresh: 1.0, Formalin: 0.5, Rotten: 0.0
+    # Score mapping: Fresh: 1.0, Formalin-mixed: 0.0, Rotten: 0.0
     score = tf.cond(condition == 'Fresh', lambda: 1.0,
             lambda: tf.cond(condition == 'Rotten', lambda: 0.0,
-            lambda: tf.cond(condition == 'Formalin-mixed', lambda: 0.5, lambda: 1.0)))
+            lambda: tf.cond(condition == 'Formalin-mixed', lambda: 0.0, lambda: 1.0)))
     
     return {'classification_head': label_one_hot, 'freshness_head': score}
 
@@ -38,8 +38,8 @@ def process_path(file_path):
     return img, label_dict
 
 def prepare_dataset(batch_size=32):
-    # Match all image files
-    list_ds = tf.data.Dataset.list_files(os.path.join(DATASET_DIR, "*", "*", "*.*"), shuffle=True)
+    # Match all image files and use fixed seed for deterministic train/val split
+    list_ds = tf.data.Dataset.list_files(os.path.join(DATASET_DIR, "*", "*", "*.*"), shuffle=True, seed=42)
     
     # Filter only valid images manually (ignoring desktop.ini etc.)
     def is_valid_image(filepath):

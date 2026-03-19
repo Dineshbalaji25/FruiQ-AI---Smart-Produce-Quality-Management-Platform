@@ -32,37 +32,28 @@ class PredictionService:
         file_stream.seek(0)
         img_array = self.processor.preprocess_image(file_stream)
         
-        # Mock prediction logic if model isn't loaded
+        # Mock prediction logic if model isn't loaded - fail in production
         if self.model is None:
-            print("Warning: Model not loaded! Using mock prediction.")
-            probs = np.random.dirichlet(np.ones(3), size=1)[0]
-            pred_idx = np.argmax(probs)
-            pred_class = self.classes[pred_idx]
-            probabilities = {
-                'fresh': float(probs[0]),
-                'rotten': float(probs[1]),
-                'formalin': float(probs[2])
-            }
-            confidence = probabilities[pred_class]
-            freshness_score = calculate_freshness_score(probabilities)
-            grade = determine_grade(freshness_score)
-        else:
-            # Multi-head output architecture: [classification_head, freshness_head]
-            preds = self.model.predict(img_array)
-            class_preds = preds[0][0]
-            reg_preds = preds[1][0]
-            
-            pred_idx = np.argmax(class_preds)
-            pred_class = self.classes[pred_idx]
-            probabilities = {
-                'fresh': float(class_preds[0]),
-                'rotten': float(class_preds[1]),
-                'formalin': float(class_preds[2])
-            }
-            confidence = probabilities[pred_class]
-            freshness_score = max(0.0, min(100.0, float(reg_preds[0]) * 100.0)) # Get scalar score out of 100
-            freshness_score = round(freshness_score, 1)
-            grade = determine_grade(freshness_score)
+            raise RuntimeError(
+                "Model not loaded. Check MODEL_PATH config and that the .keras file exists."
+            )
+        
+        # Multi-head output architecture: [classification_head, freshness_head]
+        preds = self.model.predict(img_array)
+        class_preds = preds[0][0]
+        reg_preds = preds[1][0]
+        
+        pred_idx = np.argmax(class_preds)
+        pred_class = self.classes[pred_idx]
+        probabilities = {
+            'fresh': float(class_preds[0]),
+            'rotten': float(class_preds[1]),
+            'formalin': float(class_preds[2])
+        }
+        confidence = probabilities[pred_class]
+        freshness_score = max(0.0, min(100.0, float(reg_preds[0]) * 100.0)) # Get scalar score out of 100
+        freshness_score = round(freshness_score, 1)
+        grade = determine_grade(freshness_score)
         
         # Build Response
         response = {
@@ -74,9 +65,9 @@ class PredictionService:
                 "probabilities": probabilities
             },
             "safety": {
-                "formalin_detected": (pred_class == 'formalin'),
+                "formalin_detected": (pred_class == 'formalin' or probabilities['formalin'] > 0.15),
                 "confidence": probabilities['formalin'],
-                "safe_for_consumption": (pred_class != 'formalin' and pred_class != 'rotten')
+                "safe_for_consumption": (pred_class != 'formalin' and pred_class != 'rotten' and probabilities['formalin'] <= 0.15)
             },
             "metadata": {
                 "fruit_type": fruit_type,

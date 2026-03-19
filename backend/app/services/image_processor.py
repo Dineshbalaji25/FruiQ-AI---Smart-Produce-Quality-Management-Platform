@@ -21,25 +21,23 @@ class ImageProcessor:
         # Resize image
         image = image.resize(self.target_size)
         
-        # Convert to numpy array
-        img_array = np.array(image)
-        
-        # Normalize to [0, 1] range typically expected if not handled by keras normalization layer
-        # EfficientNet automatically scales internally but doing basic scaling here, 
-        # or leave as integers depending on exact keras model setup. 
-        # For typical keras.applications.efficientnet_v2... it expects [0, 255] or [0, 1].
-        # We will keep as float32 array unscaled, but formatted as batch.
+        # Convert to numpy array and ensure float32 range [0, 255]
+        # EfficientNetV2 handles internal rescaling but expects specific distribution
+        img_array = np.array(image).astype(np.float32)
         
         img_array = np.expand_dims(img_array, axis=0)
         return img_array
 
     def validate_image(self, file_stream):
         """
-        Check if valid image according to properties.
+        Check if valid image according to properties without corrupting the stream.
         """
         try:
+            file_stream.seek(0)
             image = Image.open(file_stream)
             image.verify()
+            file_stream.seek(0) # Reset after verify
             return True
         except Exception:
             return False
+

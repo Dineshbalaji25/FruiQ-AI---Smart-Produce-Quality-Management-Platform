@@ -6,10 +6,13 @@ def build_efficientnet_model(input_shape=(224, 224, 3), num_classes=3):
     Includes classification and regression heads.
     """
     inputs = tf.keras.Input(shape=input_shape)
+    # Scaler ensures float32 range [0, 255] which EfficientNetV2 internal layer rescales
+    x = tf.keras.layers.Rescaling(1.0)(inputs)
+    
     base_model = tf.keras.applications.EfficientNetV2S(
         include_top=False,
         weights="imagenet",
-        input_tensor=inputs
+        input_tensor=x
     )
     base_model.trainable = False
     
