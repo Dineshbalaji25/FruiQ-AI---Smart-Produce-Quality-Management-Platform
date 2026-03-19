@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://fruiq-ai.me/sitemap.xml

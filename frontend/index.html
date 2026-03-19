@@ -1,13 +1,51 @@
 <!doctype html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/png" href="/logo.png" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>FruiQ AI</title>
-  </head>
-  <body>
-    <div id="root"></div>
-    <script type="module" src="/src/main.tsx"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/png" href="/logo.png" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>FruiQ — AI-Powered Fruit Freshness & Formalin Detection</title>
+  <meta name="description"
+    content="Upload a photo of any fruit and instantly detect freshness, formalin contamination, and shelf life using AI. Free to use.">
+
+  <!-- Open Graph (for sharing on WhatsApp, LinkedIn, etc.) -->
+  <meta property="og:title" content="FruiQ — Smart Fruit Quality Detection">
+  <meta property="og:description"
+    content="AI-powered freshness and formalin detection for fruits. Upload a photo, get instant results.">
+  <meta property="og:url" content="https://fruiq-ai.me">
+  <meta property="og:type" content="website">
+  <meta property="og:image" content="https://fruiq-ai.me/og-image.png">
+
+  <!-- Twitter card -->
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="FruiQ — AI Fruit Quality Scanner">
+  <meta name="twitter:description" content="Detect fresh vs rotten vs formalin-laced fruits instantly with AI.">
+</head>
+
+<body>
+  <noscript>
+    FruiQ is an AI tool that analyzes fruit images to detect freshness,
+    formalin contamination, and estimate shelf life using EfficientNetV2.
+  </noscript>
+  <div id="root"></div>
+  <!-- JSON-LD structured data for Google -->
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "FruiQ",
+      "url": "https://fruiq-ai.me",
+      "description": "AI-powered fruit freshness and formalin detection platform",
+      "applicationCategory": "HealthApplication",
+      "offers": {
+        "@type": "Offer",
+        "price": "0",
+        "priceCurrency": "USD"
+      }
+    }
+    </script>
+  <script type="module" src="/src/main.tsx"></script>
+</body>
+
 </html>
