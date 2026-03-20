@@ -10,21 +10,21 @@ export function Blog() {
             excerpt: "Many fruits look fresh from the outside but are spoiled inside. Discover how AI detects internal rot via surface patterns.",
             link: "/detect-rotten-fruits",
             category: "AI Technology",
-            date: "Oct 2023"
+            date: "March 2026"
         },
         {
             title: "Fruit Freshness Checker: A Guide to Food Quality",
             excerpt: "Traditional freshness checks are often inaccurate. Learn how machine learning helps you pick the best produce every time.",
             link: "/fruit-freshness-checker",
             category: "Health Tips",
-            date: "Oct 2023"
+            date: "March 2026"
         },
         {
             title: "Formalin Detection in Indian Fruits",
             excerpt: "Hidden chemicals like formalin pose serious health risks. See how FruiQ AI identifies artificially preserved fruits.",
             link: "/formalin-detection-fruits",
             category: "Food Safety",
-            date: "Oct 2023"
+            date: "March 2026"
         }
     ];
 
