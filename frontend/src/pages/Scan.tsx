@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { UploadCloud, CheckCircle, AlertTriangle, RefreshCw, Apple } from 'lucide-react';
+import { UploadCloud, CheckCircle, AlertTriangle, RefreshCw, Apple, Camera as CameraIcon } from 'lucide-react';
 import { Button } from '../components/common/Button';
 import api from '../services/api';
 import { motion } from 'framer-motion';
+import { Camera } from '../components/upload/Camera';
 
 export function Scan() {
     const [file, setFile] = useState<File | null>(null);
@@ -10,6 +11,7 @@ export function Scan() {
     const [loading, setLoading] = useState(false);
     const [result, setResult] = useState<any>(null);
     const [error, setError] = useState('');
+    const [cameraOpen, setCameraOpen] = useState(false);
 
     const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         if (e.target.files && e.target.files.length > 0) {
@@ -33,15 +35,26 @@ export function Scan() {
         formData.append('include_shelf_life', 'true');
 
         try {
-            const response = await api.post('/predict', formData, {
-                headers: { 'Content-Type': 'multipart/form-data' }
-            });
+            const response = await api.post('/predict', formData);
             setResult(response.data);
         } catch (err: any) {
             setError(err.response?.data?.error || 'Failed to scan the fruit.');
         } finally {
             setLoading(false);
         }
+    };
+
+    const handleCameraCapture = (capturedFile: File) => {
+        setFile(capturedFile);
+        setPreviewUrl(URL.createObjectURL(capturedFile));
+        setResult(null);
+        setError('');
+        // Automatically trigger upload after capture for seamless experience
+        // We'll use a small timeout to let the UI update first
+        setTimeout(() => {
+            const btn = document.getElementById('start-analysis-btn');
+            if (btn) btn.click();
+        }, 100);
     };
 
     return (
@@ -54,21 +67,36 @@ export function Scan() {
 
                 {/* Upload Section */}
                 <div className="flex flex-col space-y-4">
+                    <div className="flex gap-2">
+                        <Button
+                            className="flex-1 h-12 text-md"
+                            variant="secondary"
+                            onClick={() => setCameraOpen(true)}
+                        >
+                            <CameraIcon className="w-5 h-5 mr-2" />
+                            Use Camera
+                        </Button>
+                        <label className="flex-1 h-12 bg-card border hover:border-primary/50 text-foreground flex items-center justify-center rounded-md cursor-pointer transition-colors text-md font-medium">
+                            <UploadCloud className="w-5 h-5 mr-2" />
+                            Browse Files
+                            <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
+                        </label>
+                    </div>
+
                     <div className="border-2 border-dashed border-border rounded-xl p-8 bg-card flex flex-col items-center justify-center min-h-[300px] hover:border-primary/50 transition-colors">
                         {!previewUrl ? (
-                            <label className="flex flex-col items-center cursor-pointer text-center">
-                                <UploadCloud className="w-12 h-12 text-muted-foreground mb-4" />
-                                <span className="text-lg font-medium">Click or Drag to Upload</span>
-                                <span className="text-sm text-muted-foreground mt-1">PNG, JPG, WEBP up to 16MB</span>
-                                <input type="file" className="hidden" accept="image/*" onChange={handleFileChange} />
-                            </label>
+                            <div className="flex flex-col items-center text-center">
+                                <Apple className="w-16 h-16 text-primary/20 mb-4" />
+                                <span className="text-lg font-medium">Ready for Scan</span>
+                                <span className="text-sm text-muted-foreground mt-1 px-4">Tap "Use Camera" or browse gallery to start analysis</span>
+                            </div>
                         ) : (
                             <div className="relative w-full h-full flex items-center justify-center">
-                                <img src={previewUrl} alt="Preview" className="max-h-[300px] rounded-md object-contain" />
+                                <img src={previewUrl} alt="Preview" className="max-h-[350px] rounded-md object-contain" />
                                 <Button
                                     variant="secondary"
                                     size="icon"
-                                    className="absolute top-2 right-2 rounded-full shadow-md"
+                                    className="absolute top-2 right-2 rounded-full shadow-md bg-background/80 hover:bg-background"
                                     onClick={() => {
                                         setFile(null);
                                         setPreviewUrl(null);
@@ -81,15 +109,21 @@ export function Scan() {
                         )}
                     </div>
                     <Button
-                        className="w-full text-lg h-12"
+                        id="start-analysis-btn"
+                        className="w-full text-lg h-14 font-bold shadow-lg shadow-primary/10"
                         disabled={!file || loading}
                         onClick={handleUpload}
                     >
                         {loading ? <RefreshCw className="w-5 h-5 animate-spin mr-2" /> : null}
-                        {loading ? 'Processing Analysis...' : 'Start Analysis'}
+                        {loading ? 'AI Models Running...' : 'Start Intelligence Analysis'}
                     </Button>
-                    {error && <p className="text-sm text-destructive mt-2">{error}</p>}
+                    {error && <p className="text-sm text-destructive mt-2 text-center font-bold">{error}</p>}
                 </div>
+
+                {/* Camera Overlay */}
+                {cameraOpen && (
+                    <Camera onCapture={handleCameraCapture} onClose={() => setCameraOpen(false)} />
+                )}
 
                 {/* Results Section */}
                 <div className="bg-card border rounded-xl overflow-hidden shadow-sm relative min-h-[400px]">
