@@ -38,7 +38,7 @@ def create_app(config_class=Config):
         return jsonify({
             "status": "healthy",
             "model_loaded": True, # Assume true for skeleton
-            "version": "1.0.0",
+            "version": "1.2.0",
             "uptime": 3600
         }), 200
 

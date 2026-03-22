@@ -24,6 +24,14 @@ export function Camera({ onCapture, onClose }: CameraProps) {
             setStream(mediaStream);
             if (videoRef.current) {
                 videoRef.current.srcObject = mediaStream;
+                // Wait for the stream to actually start rendering frames
+                await new Promise<void>((resolve) => {
+                    if (videoRef.current) {
+                        videoRef.current.onloadeddata = () => resolve();
+                    } else {
+                        resolve();
+                    }
+                });
             }
         } catch (err) {
             setError('Unable to access camera. Please ensure permissions are granted.');
@@ -49,13 +57,24 @@ export function Camera({ onCapture, onClose }: CameraProps) {
             const context = canvas.getContext('2d');
             if (context) {
                 context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+                // Safety check: ensure the frame isn't pure black
+                const imageData = context.getImageData(0, 0, 10, 10).data;
+                const isBlack = Array.from(imageData).every((val, i) => i % 4 === 3 || val < 10);
+
+                if (isBlack) {
+                    console.warn("Captured black frame, retrying...");
+                    return; // Don't close or capture yet
+                }
+
                 canvas.toBlob((blob) => {
                     if (blob) {
-                        const file = new File([blob], `capture_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                        // Using explicit filename with extension for backend verification
+                        const file = new File([blob], `live_scan_${Date.now()}.jpg`, { type: 'image/jpeg' });
                         onCapture(file);
                         onClose();
                     }
-                }, 'image/jpeg', 0.9);
+                }, 'image/jpeg', 0.95);
             }
         }
     }, [onCapture, onClose]);
@@ -86,6 +105,7 @@ export function Camera({ onCapture, onClose }: CameraProps) {
                             ref={videoRef}
                             autoPlay
                             playsInline
+                            muted
                             className="w-full h-full object-cover"
                         />
                     )}

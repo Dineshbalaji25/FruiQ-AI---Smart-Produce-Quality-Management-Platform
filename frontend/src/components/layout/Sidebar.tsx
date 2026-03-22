@@ -43,7 +43,7 @@ export function Sidebar() {
             </nav>
 
             <div className="p-6 border-t border-border">
-                <div className="text-xs text-muted-foreground">Version 1.0.0</div>
+                <div className="text-xs text-muted-foreground">Version 1.2.0</div>
             </div>
         </aside>
     );

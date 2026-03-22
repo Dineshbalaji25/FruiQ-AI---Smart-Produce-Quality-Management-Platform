@@ -94,7 +94,7 @@ class PredictionService:
                 "fruit_type": fruit_type,
                 "prediction_id": str(uuid.uuid4()),
                 "timestamp": datetime.datetime.utcnow().isoformat() + "Z",
-                "model_version": "v1.0.0"
+                "model_version": "v1.2.0"
             }
         }
         
