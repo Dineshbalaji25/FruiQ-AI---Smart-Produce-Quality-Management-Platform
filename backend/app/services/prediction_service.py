@@ -76,6 +76,14 @@ class PredictionService:
         freshness_score = round(freshness_score, 1)
         grade = determine_grade(freshness_score)
         
+        # Estimate Brix (sugar content) based on freshness and class
+        base_brix = 11.0 if fruit_type == 'apple' else 10.0
+        variance = (freshness_score / 100.0) * 4.0
+        estimated_brix = round(base_brix + variance, 1)
+        
+        if pred_class == 'rotten':
+             estimated_brix = round(max(8.0, estimated_brix - 2.5), 1)
+        
         # Build Response
         response = {
             "prediction": {
@@ -83,6 +91,7 @@ class PredictionService:
                 "confidence": confidence,
                 "freshness_score": freshness_score,
                 "grade": grade,
+                "estimated_brix": estimated_brix,
                 "probabilities": probabilities
             },
             "safety": {

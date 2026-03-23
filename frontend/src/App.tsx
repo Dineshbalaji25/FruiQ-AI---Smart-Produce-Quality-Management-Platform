@@ -1,6 +1,6 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import { Layout } from './components/layout/Layout';
+import { LandingLayout } from './components/layout/LandingLayout';
 import { Home } from './pages/Home';
 import { Scan } from './pages/Scan';
 import { Dashboard } from './pages/Dashboard';
@@ -19,20 +19,20 @@ function App() {
   return (
     <>
       <Router>
-        <Layout>
-          <Routes>
-            <Route path="/" element={<Dashboard />} />
-            <Route path="/home" element={<Home />} />
-            <Route path="/scan" element={<Scan />} />
-            <Route path="/batch" element={<BatchProcess />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/blog" element={<Blog />} />
-            <Route path="/detect-rotten-fruits" element={<DetectRottenFruits />} />
-            <Route path="/fruit-freshness-checker" element={<FruitFreshnessChecker />} />
-            <Route path="/formalin-detection-fruits" element={<FormalinDetection />} />
-          </Routes>
-        </Layout>
+        <Routes>
+          {/* All routes use LandingLayout (Navbar + Footer) */}
+          <Route path="/" element={<LandingLayout><Dashboard /></LandingLayout>} />
+          <Route path="/scan" element={<LandingLayout><Scan /></LandingLayout>} />
+          <Route path="/batch" element={<LandingLayout><BatchProcess /></LandingLayout>} />
+
+          <Route path="/home" element={<LandingLayout><Home /></LandingLayout>} />
+          <Route path="/about" element={<LandingLayout><About /></LandingLayout>} />
+          <Route path="/contact" element={<LandingLayout><Contact /></LandingLayout>} />
+          <Route path="/blog" element={<LandingLayout><Blog /></LandingLayout>} />
+          <Route path="/detect-rotten-fruits" element={<LandingLayout><DetectRottenFruits /></LandingLayout>} />
+          <Route path="/fruit-freshness-checker" element={<LandingLayout><FruitFreshnessChecker /></LandingLayout>} />
+          <Route path="/formalin-detection-fruits" element={<LandingLayout><FormalinDetection /></LandingLayout>} />
+        </Routes>
       </Router>
       <Analytics />
       <SpeedInsights />

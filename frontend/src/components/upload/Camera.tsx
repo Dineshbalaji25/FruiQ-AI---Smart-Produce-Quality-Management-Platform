@@ -68,13 +68,16 @@ export function Camera({ onCapture, onClose }: CameraProps) {
                 }
 
                 canvas.toBlob((blob) => {
+                    console.log('Camera capture blob produced:', blob);
                     if (blob) {
-                        // Using explicit filename with extension for backend verification
-                        const file = new File([blob], `live_scan_${Date.now()}.jpg`, { type: 'image/jpeg' });
+                        // Create a file from the blob with a standard name
+                        const file = new File([blob], `capture_${Date.now()}.jpg`, { type: 'image/jpeg' });
                         onCapture(file);
                         onClose();
+                    } else {
+                        console.error('Failed to create blob from canvas');
                     }
-                }, 'image/jpeg', 0.95);
+                }, 'image/jpeg', 0.92);
             }
         }
     }, [onCapture, onClose]);
