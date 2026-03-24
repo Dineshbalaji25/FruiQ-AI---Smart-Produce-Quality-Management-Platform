@@ -10,8 +10,24 @@ import { FruitGrid } from '../components/home/FruitGrid';
 import { UserSegments } from '../components/home/UserSegments';
 import { FAQAccordion } from '../components/home/FAQAccordion';
 import { TrustStrip } from '../components/home/TrustStrip';
+import { useLocation } from 'react-router-dom';
 
 export function Home() {
+    const { search } = useLocation();
+
+    React.useEffect(() => {
+        const params = new URLSearchParams(search);
+        const id = params.get('id');
+        if (id) {
+            const element = document.getElementById(id);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth' });
+                // Clean up the URL by removing the query param (optional but cleaner)
+                window.history.replaceState(null, '', window.location.pathname + window.location.hash.split('?')[0]);
+            }
+        }
+    }, [search]);
+
     return (
         <div className="flex flex-col min-h-screen">
             {/* HERO SECTION */}

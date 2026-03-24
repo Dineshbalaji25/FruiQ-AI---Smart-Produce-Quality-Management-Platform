@@ -8,10 +8,10 @@ export function Navbar() {
     const [solutionsOpen, setSolutionsOpen] = useState(false);
 
     const solutions = [
-        { name: 'Consumers', icon: <ShoppingCart className="w-5 h-5 text-primary" />, desc: 'Check if the fruit you bought is safe before eating', hash: '#consumers' },
-        { name: 'Vendors & traders', icon: <Store className="w-5 h-5 text-primary" />, desc: 'Verify your stock quality before selling', hash: '#vendors' },
-        { name: 'Restaurants', icon: <Utensils className="w-5 h-5 text-primary" />, desc: 'Screen incoming produce for your kitchen', hash: '#restaurants' },
-        { name: 'Food inspectors', icon: <Shield className="w-5 h-5 text-primary" />, desc: 'Quick field screening without lab equipment', hash: '#inspectors' },
+        { name: 'Consumers', icon: <ShoppingCart className="w-5 h-5 text-primary" />, desc: 'Check if the fruit you bought is safe before eating', id: 'consumers' },
+        { name: 'Vendors & traders', icon: <Store className="w-5 h-5 text-primary" />, desc: 'Verify your stock quality before selling', id: 'vendors' },
+        { name: 'Restaurants', icon: <Utensils className="w-5 h-5 text-primary" />, desc: 'Screen incoming produce for your kitchen', id: 'restaurants' },
+        { name: 'Food inspectors', icon: <Shield className="w-5 h-5 text-primary" />, desc: 'Quick field screening without lab equipment', id: 'inspectors' },
     ];
 
     return (
@@ -37,7 +37,7 @@ export function Navbar() {
                             {solutionsOpen && (
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 w-[600px] bg-card border border-border shadow-lg rounded-xl p-4 grid grid-cols-2 gap-4">
                                     {solutions.map((sol) => (
-                                        <Link key={sol.name} to={`/${sol.hash}`} className="flex items-start gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
+                                        <Link key={sol.name} to={`/?id=${sol.id}`} className="flex items-start gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
                                             <div className="mt-1 bg-primary/10 p-2 rounded-md">
                                                 {sol.icon}
                                             </div>
@@ -76,7 +76,7 @@ export function Navbar() {
                 <div className="md:hidden bg-card border-b border-border p-4 space-y-4">
                     <div className="font-semibold px-2 mb-2">Solutions</div>
                     {solutions.map((sol) => (
-                        <Link key={sol.name} to={`/${sol.hash}`} className="block px-2 py-1 text-muted-foreground hover:text-primary" onClick={() => setIsOpen(false)}>
+                        <Link key={sol.name} to={`/?id=${sol.id}`} className="block px-2 py-1 text-muted-foreground hover:text-primary" onClick={() => setIsOpen(false)}>
                             {sol.name}
                         </Link>
                     ))}
