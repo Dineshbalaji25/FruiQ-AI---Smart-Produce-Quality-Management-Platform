@@ -43,6 +43,7 @@ def create_app(config_class=Config):
         }), 200
 
     @app.route('/api/v1/stats', methods=['GET'])
+    @app.route('/stats', methods=['GET']) # Alias for older builds or simplified access
     def stats():
         from .database.models import PredictionRecord
         from sqlalchemy import func

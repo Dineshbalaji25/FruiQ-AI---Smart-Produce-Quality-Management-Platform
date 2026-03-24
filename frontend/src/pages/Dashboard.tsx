@@ -24,7 +24,7 @@ export function Dashboard() {
     useEffect(() => {
         const fetchStats = async () => {
             try {
-                const response = await api.get('/stats');
+                const response = await api.get('/api/v1/stats');
                 setStats(response.data);
             } catch (error) {
                 console.error("Failed to fetch dashboard stats", error);
@@ -39,7 +39,21 @@ export function Dashboard() {
         return <div className="flex h-[80vh] items-center justify-center animate-pulse text-muted-foreground font-medium">Loading AI metrics...</div>;
     }
 
-    if (!stats) return null;
+    if (!stats) {
+        return (
+            <div className="flex h-[80vh] flex-col items-center justify-center text-muted-foreground font-medium space-y-4">
+                <ShieldAlert className="w-12 h-12 text-destructive/50" />
+                <p>Unable to synchronize with the AI analysis engine.</p>
+                <p className="text-xs">The statistics endpoint might be temporarily unavailable or misconfigured.</p>
+                <button
+                    onClick={() => window.location.reload()}
+                    className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-md text-sm font-bold shadow-sm"
+                >
+                    Retry Connection
+                </button>
+            </div>
+        );
+    }
 
     const pieData = [
         { name: 'Fresh', value: stats.class_distribution.fresh },

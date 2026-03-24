@@ -37,7 +37,7 @@ export function Navbar() {
                             {solutionsOpen && (
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 w-[600px] bg-card border border-border shadow-lg rounded-xl p-4 grid grid-cols-2 gap-4">
                                     {solutions.map((sol) => (
-                                        <a key={sol.name} href={`/home${sol.hash}`} className="flex items-start gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
+                                        <Link key={sol.name} to={`/home${sol.hash}`} className="flex items-start gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
                                             <div className="mt-1 bg-primary/10 p-2 rounded-md">
                                                 {sol.icon}
                                             </div>
@@ -45,7 +45,7 @@ export function Navbar() {
                                                 <div className="font-semibold text-foreground">{sol.name}</div>
                                                 <div className="text-sm text-muted-foreground mt-1">{sol.desc}</div>
                                             </div>
-                                        </a>
+                                        </Link>
                                     ))}
                                 </div>
                             )}
@@ -76,9 +76,9 @@ export function Navbar() {
                 <div className="md:hidden bg-card border-b border-border p-4 space-y-4">
                     <div className="font-semibold px-2 mb-2">Solutions</div>
                     {solutions.map((sol) => (
-                        <a key={sol.name} href={`/home${sol.hash}`} className="block px-2 py-1 text-muted-foreground hover:text-primary" onClick={() => setIsOpen(false)}>
+                        <Link key={sol.name} to={`/home${sol.hash}`} className="block px-2 py-1 text-muted-foreground hover:text-primary" onClick={() => setIsOpen(false)}>
                             {sol.name}
-                        </a>
+                        </Link>
                     ))}
                     <div className="border-t border-border my-2"></div>
                     <Link to="/about" className="block px-2 py-2 text-foreground font-medium" onClick={() => setIsOpen(false)}>About</Link>
