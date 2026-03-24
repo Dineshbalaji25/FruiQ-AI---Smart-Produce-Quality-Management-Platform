@@ -19,7 +19,7 @@ export function Navbar() {
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <div className="flex justify-between items-center h-16">
                     <div className="flex items-center">
-                        <Link to="/home" className="flex items-center gap-2">
+                        <Link to="/" className="flex items-center gap-2">
                             <Apple className="w-8 h-8 text-primary" />
                             <span className="text-xl font-bold tracking-tight">FruiQ</span>
                         </Link>
@@ -37,7 +37,7 @@ export function Navbar() {
                             {solutionsOpen && (
                                 <div className="absolute top-full left-1/2 -translate-x-1/2 w-[600px] bg-card border border-border shadow-lg rounded-xl p-4 grid grid-cols-2 gap-4">
                                     {solutions.map((sol) => (
-                                        <Link key={sol.name} to={`/home${sol.hash}`} className="flex items-start gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
+                                        <Link key={sol.name} to={`/${sol.hash}`} className="flex items-start gap-4 p-3 rounded-lg hover:bg-muted transition-colors">
                                             <div className="mt-1 bg-primary/10 p-2 rounded-md">
                                                 {sol.icon}
                                             </div>
@@ -55,7 +55,7 @@ export function Navbar() {
                         <Link to="/blog" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Blog</Link>
 
                         <div className="flex items-center gap-4 ml-4 border-l border-border pl-8">
-                            <Link to="/" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Dashboard</Link>
+                            <Link to="/dashboard" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Dashboard</Link>
                             <Link to="/batch" className="text-sm font-medium text-foreground hover:text-primary transition-colors">Batch Process</Link>
                             <Button asChild size="sm">
                                 <Link to="/scan">Scan Fruit</Link>
@@ -76,14 +76,14 @@ export function Navbar() {
                 <div className="md:hidden bg-card border-b border-border p-4 space-y-4">
                     <div className="font-semibold px-2 mb-2">Solutions</div>
                     {solutions.map((sol) => (
-                        <Link key={sol.name} to={`/home${sol.hash}`} className="block px-2 py-1 text-muted-foreground hover:text-primary" onClick={() => setIsOpen(false)}>
+                        <Link key={sol.name} to={`/${sol.hash}`} className="block px-2 py-1 text-muted-foreground hover:text-primary" onClick={() => setIsOpen(false)}>
                             {sol.name}
                         </Link>
                     ))}
                     <div className="border-t border-border my-2"></div>
                     <Link to="/about" className="block px-2 py-2 text-foreground font-medium" onClick={() => setIsOpen(false)}>About</Link>
                     <Link to="/blog" className="block px-2 py-2 text-foreground font-medium" onClick={() => setIsOpen(false)}>Blog</Link>
-                    <Link to="/" className="block px-2 py-2 text-foreground font-medium" onClick={() => setIsOpen(false)}>Dashboard</Link>
+                    <Link to="/dashboard" className="block px-2 py-2 text-foreground font-medium" onClick={() => setIsOpen(false)}>Dashboard</Link>
                     <Link to="/batch" className="block px-2 py-2 text-foreground font-medium" onClick={() => setIsOpen(false)}>Batch Process</Link>
                     <Button asChild className="w-full mt-4" onClick={() => setIsOpen(false)}>
                         <Link to="/scan">Scan Fruit</Link>

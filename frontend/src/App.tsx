@@ -21,11 +21,11 @@ function App() {
       <Router>
         <Routes>
           {/* All routes use LandingLayout (Navbar + Footer) */}
-          <Route path="/" element={<LandingLayout><Dashboard /></LandingLayout>} />
+          <Route path="/" element={<LandingLayout><Home /></LandingLayout>} />
           <Route path="/scan" element={<LandingLayout><Scan /></LandingLayout>} />
           <Route path="/batch" element={<LandingLayout><BatchProcess /></LandingLayout>} />
 
-          <Route path="/home" element={<LandingLayout><Home /></LandingLayout>} />
+          <Route path="/dashboard" element={<LandingLayout><Dashboard /></LandingLayout>} />
           <Route path="/about" element={<LandingLayout><About /></LandingLayout>} />
           <Route path="/contact" element={<LandingLayout><Contact /></LandingLayout>} />
           <Route path="/blog" element={<LandingLayout><Blog /></LandingLayout>} />
