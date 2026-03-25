@@ -38,8 +38,8 @@ export function Home() {
                 <h1 className="text-5xl md:text-7xl font-extrabold tracking-tight text-foreground leading-[1.1]">
                     Smart Produce <br className="hidden md:inline" /> Quality Management
                 </h1>
-                <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed">
-                    Next-generation platform for real-time fruit quality assessment using deep learning. Ensure food safety, predict shelf life, and grade faster.
+                <p className="text-xl md:text-2xl text-muted-foreground leading-relaxed font-medium">
+                    Is your fruit safe to eat? Find out in 3 seconds — free.
                 </p>
 
                 <div className="flex flex-col sm:flex-row gap-4 justify-center mt-6 w-full sm:w-auto">
@@ -77,7 +77,7 @@ export function Home() {
             {/* BOTTOM CTA */}
             <div className="w-full bg-primary text-primary-foreground py-20 px-4 text-center">
                 <h2 className="text-4xl font-extrabold mb-6">Ready to check your produce?</h2>
-                <p className="text-xl opacity-90 mb-10 max-w-2xl mx-auto">Join thousands of users screening their food quality seamlessly with our real-time AI.</p>
+                <p className="text-xl opacity-90 mb-10 max-w-2xl mx-auto">Join users across India screening their produce with AI seamlessly.</p>
                 <Button asChild size="lg" className="text-lg h-14 px-10 bg-background text-foreground hover:bg-muted font-bold">
                     <Link to="/scan">Start Scanning For Free</Link>
                 </Button>

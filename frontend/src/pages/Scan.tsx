@@ -35,6 +35,8 @@ export function Scan() {
     const [cameraOpen, setCameraOpen] = useState(false);
     const [selectedProtocol, setSelectedProtocol] = useState<Protocol>(PROTOCOLS[0]);
     const [supplier, setSupplier] = useState('');
+    const [fruitType, setFruitType] = useState('apple');
+    const [includeGradcam, setIncludeGradcam] = useState(false);
 
     const calculateInhouseGrade = (score: number) => {
         if (score >= selectedProtocol.thresholds.A) return 'A';
@@ -60,9 +62,9 @@ export function Scan() {
 
         const formData = new FormData();
         formData.append('image', targetFile);
-        formData.append('include_gradcam', 'true');
+        formData.append('include_gradcam', includeGradcam ? 'true' : 'false');
         formData.append('include_shelf_life', 'true');
-        formData.append('fruit_type', 'apple');
+        formData.append('fruit_type', fruitType);
 
         try {
             const response = await fetch(`${API_BASE}/api/v1/predict`, {
@@ -234,6 +236,38 @@ export function Scan() {
                                     value={supplier}
                                     onChange={(e) => setSupplier(e.target.value)}
                                 />
+                            </div>
+
+                            <div className="grid grid-cols-2 gap-4">
+                                <div>
+                                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest block mb-1">Fruit Variety</label>
+                                    <select
+                                        className="w-full bg-muted/50 border-none rounded-lg px-4 py-2 text-sm focus:ring-2 ring-primary/50"
+                                        value={fruitType}
+                                        onChange={(e) => setFruitType(e.target.value)}
+                                    >
+                                        <option value="apple">Apple</option>
+                                        <option value="banana">Banana</option>
+                                        <option value="grape">Grape</option>
+                                        <option value="mango">Mango</option>
+                                        <option value="orange">Orange</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label className="text-xs font-bold text-muted-foreground uppercase tracking-widest block mb-1">XAI Analysis</label>
+                                    <div className="flex items-center h-[38px]">
+                                        <label className="relative inline-flex items-center cursor-pointer">
+                                            <input
+                                                type="checkbox"
+                                                className="sr-only peer"
+                                                checked={includeGradcam}
+                                                onChange={(e) => setIncludeGradcam(e.target.checked)}
+                                            />
+                                            <div className="w-11 h-6 bg-muted rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary"></div>
+                                            <span className="ms-3 text-xs font-medium text-muted-foreground">Heatmap</span>
+                                        </label>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
