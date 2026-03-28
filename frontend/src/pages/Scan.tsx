@@ -72,13 +72,19 @@ export function Scan() {
                 body: formData,
             });
 
-            const data = await response.json();
-
-            if (!response.ok) {
-                throw new Error(data.error || `Server error: ${response.status}`);
+            // Check if response is JSON
+            const contentType = response.headers.get('content-type');
+            if (contentType && contentType.includes('application/json')) {
+                const data = await response.json();
+                if (!response.ok) {
+                    throw new Error(data.error || `Server error: ${response.status}`);
+                }
+                setResult(data);
+            } else {
+                const text = await response.text();
+                console.error('Non-JSON response:', text);
+                throw new Error(`Server returned non-JSON response (${response.status}). The backend might be down or misconfigured.`);
             }
-
-            setResult(data);
         } catch (err: any) {
             setError(err.message || 'Failed to scan the fruit.');
         } finally {

@@ -20,7 +20,7 @@ __pycache__/
 backend/.env
 frontend/.env
 
-# Ignore locally trained models
-backend/models/trained/
-models/trained/
+# Allow trained models for deployment
+# backend/models/trained/
+# models/trained/
 

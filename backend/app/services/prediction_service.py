@@ -61,18 +61,38 @@ class PredictionService:
         
         # Multi-head output architecture: [classification_head, freshness_head]
         preds = self.model.predict(img_array)
-        class_preds = preds[0][0]
-        reg_preds = preds[1][0]
         
+        # Defensive check for output structure
+        if isinstance(preds, list):
+            # Model has multiple output heads
+            class_preds = preds[0][0]
+            reg_preds = preds[1][0] if len(preds) > 1 else None
+        else:
+            # Single output head (likely just classification)
+            class_preds = preds[0]
+            reg_preds = None
+            
         pred_idx = np.argmax(class_preds)
-        pred_class = self.classes[pred_idx]
-        probabilities = {
-            'fresh': float(class_preds[0]),
-            'rotten': float(class_preds[1]),
-            'formalin': float(class_preds[2])
-        }
-        confidence = probabilities[pred_class]
-        freshness_score = max(0.0, min(100.0, float(reg_preds[0]) * 100.0)) # Get scalar score out of 100
+        pred_class = self.classes[pred_idx] if pred_idx < len(self.classes) else "unknown"
+        
+        # Safely build probabilities dictionary
+        probabilities = {}
+        for i, class_name in enumerate(self.classes):
+            if i < len(class_preds):
+                probabilities[class_name] = float(class_preds[i])
+            else:
+                probabilities[class_name] = 0.0
+        
+        confidence = float(class_preds[pred_idx]) if pred_idx < len(class_preds) else 0.0
+        
+        # Calculate freshness score based on regression or fallback to probabilities
+        if reg_preds is not None:
+            # Use dedicated regression head
+            freshness_score = max(0.0, min(100.0, float(reg_preds[0]) * 100.0))
+        else:
+            # Fallback to probability-based logic
+            freshness_score = calculate_freshness_score(probabilities)
+            
         freshness_score = round(freshness_score, 1)
         grade = determine_grade(freshness_score)
         

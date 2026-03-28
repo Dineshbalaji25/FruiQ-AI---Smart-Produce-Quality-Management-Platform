@@ -8,8 +8,9 @@ services:
       - REDIS_URL=redis://redis:6379/0
       - FLASK_APP=wsgi.py
       - FLASK_ENV=production
-      - MODEL_PATH=./models/trained/efficientnet_v2.h5
+      - MODEL_PATH=./models/trained/efficientnet_v2.keras
       - UPLOAD_FOLDER=./uploads
+    restart: unless-stopped
     depends_on:
       - db
       - redis
@@ -21,22 +22,27 @@ services:
     build: ./frontend
     ports:
       - "3000:3000"
+    restart: unless-stopped
     environment:
-      - REACT_APP_API_URL=http://localhost:5000/api/v1
+      - VITE_API_URL=http://localhost:5000/api/v1
     depends_on:
       - backend
 
   db:
     image: postgres:15
+    restart: unless-stopped
     environment:
       POSTGRES_DB: fruiq
       POSTGRES_USER: user
       POSTGRES_PASSWORD: pass
+    ports:
+      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
   redis:
     image: redis:7-alpine
+    restart: unless-stopped
     ports:
       - "6379:6379"
 

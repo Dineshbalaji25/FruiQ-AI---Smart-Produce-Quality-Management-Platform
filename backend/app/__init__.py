@@ -136,8 +136,14 @@ def create_app(config_class=Config):
         return send_from_directory(app.static_folder, 'index.html')
 
     # Initialize tables if they don't exist
-    with app.app_context():
-        db.create_all()
+    try:
+        with app.app_context():
+            db.create_all()
+            logging.info("Database tables initialized.")
+    except Exception as e:
+        logging.error(f"Failed to initialize database tables: {e}")
+        # We don't raise here to allow the app to start even if DB is temporarily down
+        # (e.g. during container startup orchestration)
 
     # Serve React App
     @app.route('/', defaults={'path': ''})

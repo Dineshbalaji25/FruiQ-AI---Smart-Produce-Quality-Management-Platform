@@ -52,4 +52,4 @@ RUN chown -R user:user /app
 USER user
 
 # Start Gunicorn on port 7860
-CMD ["gunicorn", "-w", "2", "-b", "0.0.0.0:7860", "--timeout", "120", "wsgi:app"]
+CMD ["gunicorn", "--preload", "-w", "2", "-b", "0.0.0.0:7860", "--timeout", "120", "wsgi:app"]
